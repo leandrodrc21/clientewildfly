@@ -1,0 +1,39 @@
+version: '3'
+
+services:
+  db:
+    image: leandrorc/oracle:1.0
+    ports:
+      - '1521:1521'     
+    volumes:
+      - dbadmin:/u01/app/oracle/admin
+      - dbdiag:/u01/app/oracle/diag
+      - dbrecovery:/u01/app/oracle/fast_recovery_area
+      - dbdata:/u01/app/oracle/oradata
+      - dboradiag:/u01/app/oracle/oradiag_oracle
+    networks:
+      - frontend
+  cliente:
+    image: leandrorc/wildflycliente:1.0
+    depends_on:
+    - db
+    ports:
+      - '9090:1010'
+      - '9990:9990'
+    networks:
+      - frontend
+  servidor:
+    image: leandrorc/wildflyservidor:1.0
+    ports:
+      - '4447:8080'
+      - '9992:9990'
+    networks:
+      - frontend
+networks:
+  frontend:
+volumes:
+  dbadmin:
+  dbdiag:
+  dbrecovery:
+  dbdata:
+  dboradiag:
